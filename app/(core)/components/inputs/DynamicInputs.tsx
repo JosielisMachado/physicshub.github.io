@@ -3,7 +3,25 @@ import CheckboxInput from "./CheckboxInput.jsx";
 import ColorInput from "./ColorInput.jsx";
 import SelectInput from "./SelectInput.jsx";
 
-export default function DynamicInputs({ config, values, onChange }) {
+// 1. Define the specific shapes for your configuration
+interface FieldConfig {
+  name: string;
+  label: string;
+  type: "number" | "checkbox" | "color" | "select";
+  placeholder?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+  options?: { value: string | number; label: string }[];
+}
+
+interface Props {
+  config: FieldConfig[];
+  values: Record<string, any>;
+  onChange: (name: string, value: any) => void;
+}
+
+export default function DynamicInputs({ config, values, onChange }: Props) {
   return (
     <div className="inputs-container">
       {config.map((field) => {
@@ -19,10 +37,12 @@ export default function DynamicInputs({ config, values, onChange }) {
               {...commonProps}
               val={values[field.name]}
               placeholder={field.placeholder}
-              min={field?.min}
-              max={field?.max}
-              step={field?.step}
-              onChange={(e) => onChange(field.name, Number(e.target.value))}
+              min={field.min}
+              max={field.max}
+              step={field.step}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange(field.name, Number(e.target.value))
+              }
             />
           );
         }
@@ -32,8 +52,10 @@ export default function DynamicInputs({ config, values, onChange }) {
             <CheckboxInput
               key={field.name}
               {...commonProps}
-              checked={values[field.name]}
-              onChange={(e) => onChange(field.name, e.target.checked)}
+              checked={!!values[field.name]}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange(field.name, e.target.checked)
+              }
             />
           );
         }
@@ -44,7 +66,9 @@ export default function DynamicInputs({ config, values, onChange }) {
               key={field.name}
               {...commonProps}
               value={values[field.name]}
-              onChange={(e) => onChange(field.name, e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                onChange(field.name, e.target.value)
+              }
             />
           );
         }
@@ -54,10 +78,12 @@ export default function DynamicInputs({ config, values, onChange }) {
             <SelectInput
               key={field.name}
               {...commonProps}
-              options={field.options}
+              options={field.options || []}
               value={values[field.name]}
               placeholder={field.placeholder}
-              onChange={(e) => onChange(field.name, e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                onChange(field.name, e.target.value)
+              }
             />
           );
         }
