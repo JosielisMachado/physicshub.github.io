@@ -122,7 +122,7 @@ const SimInfoMapper = (bodyState) => {
     Speed: `${bodyState.velocity.mag().toFixed(2)} m/s`,
     KE: `${bodyState.kineticEnergy.toFixed(2)} J`,
     PE: `${bodyState.potentialEnergy.toFixed(2)} J`,
-    "Total E": `${(bodyState.kineticEnergy + bodyState.potentialEnergy).toFixed(2)} J`
+    "Total E": `${(bodyState.kineticEnergy + bodyState.potentialEnergy).toFixed(2)} J`,
   };
 };
 
