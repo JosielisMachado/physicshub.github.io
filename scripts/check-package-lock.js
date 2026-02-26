@@ -9,7 +9,8 @@ try {
     console.error("\n❌ Error: package-lock.json is staged for commit!");
     console.error("This file should not be committed.\n");
     console.error("Run: git reset HEAD package-lock.json\n");
-    process.exit(1);
+    // process.exit(1);
+    execSync("git restore --staged package-lock.json");
   }
 
   console.log("✅ Pre-commit checks passed");
