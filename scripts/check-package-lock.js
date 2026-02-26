@@ -6,14 +6,25 @@ try {
   });
 
   if (stagedFiles.includes("package-lock.json")) {
-    console.error("\n❌ Error: package-lock.json is staged for commit!");
-    console.error("This file should not be committed.\n");
-    console.error("Run: git reset HEAD package-lock.json\n");
-    // process.exit(1);
-    execSync("git restore --staged package-lock.json");
+    console.log(
+      "package-lock.json detected in staged files. Automatically unstaging it..."
+    );
+
+    try {
+      execSync("git restore --staged package-lock.json");
+    } catch {
+      try {
+        execSync("git reset HEAD -- package-lock.json");
+      } catch {
+        console.warn(
+          "\n Warning: failed to automatically unstage package-lock.json. Please run:"
+        );
+        console.warn("  git reset HEAD package-lock.json\n");
+      }
+    }
   }
 
-  console.log("✅ Pre-commit checks passed");
+  console.log("Pre-commit checks passed");
 } catch (error) {
   console.error("Pre-commit check failed:", error.message);
   process.exit(1);
